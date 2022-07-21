@@ -158,7 +158,7 @@ contract MultiSigWallet {
 
         transaction.executed = true;
 
-        (bool success, ) = _to.call{value: msg.value}(
+        (bool success, ) = _to.call{value: 0 wei}(
             
             _data
             // abi.encodeWithSignature("callMe(uint256)", 123)
