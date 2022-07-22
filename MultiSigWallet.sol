@@ -116,9 +116,10 @@ contract MultiSigWallet {
 
         emit ConfirmTransaction(msg.sender, _txIndex);
     }
-    //not working
+   
     function executeTransaction( uint _txIndex)
         public
+        payable
         onlyOwner
         txExists(_txIndex)
         notExecuted(_txIndex)
@@ -135,32 +136,6 @@ contract MultiSigWallet {
         (bool success, ) = transaction.to.call{value: transaction.value}(
             
             transaction.data
-            // abi.encodeWithSignature("callMe(uint256)", 123)
-        );
-        require(success, "tx failed");
-
-        emit ExecuteTransaction(msg.sender, _txIndex);
-    }
-
-    //working
-        function _executeTransaction( uint _txIndex, address _to,bytes memory _data)
-        public
-        onlyOwner
-        txExists(_txIndex)
-        notExecuted(_txIndex)
-    {
-        Transaction storage transaction = transactions[_txIndex];
-
-        require(
-            transaction.numConfirmations >= numConfirmationsRequired,
-            "cannot execute tx"
-        );
-
-        transaction.executed = true;
-
-        (bool success, ) = _to.call{value: 0 wei}(
-            
-            _data
             // abi.encodeWithSignature("callMe(uint256)", 123)
         );
         require(success, "tx failed");
@@ -218,7 +193,7 @@ contract MultiSigWallet {
 contract TestContract {
     uint public i;
 
-    function callMe(uint j) public {
+    function callMe(uint j) public  payable{
         i += j;
     }
 
